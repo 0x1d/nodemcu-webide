@@ -1,0 +1,6 @@
+[submodule "httpserver"]
+	path = httpserver
+	url = https://github.com/marcoskirsch/nodemcu-httpserver.git
+[submodule "uploader"]
+	path = uploader
+	url = https://github.com/kmpm/nodemcu-uploader.git
