@@ -1,0 +1,47 @@
+diff --git a/Makefile b/Makefile
+index a03055b..c1f17d4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,13 +3,16 @@
+ ######################################################################
+ 
+ # Path to nodemcu-uploader (https://github.com/kmpm/nodemcu-uploader)
+-NODEMCU-UPLOADER=../nodemcu-uploader/nodemcu-uploader.py
++NODEMCU-UPLOADER?=../nodemcu-uploader/nodemcu-uploader.py
+ 
+ # Serial port
+-PORT=/dev/cu.SLAB_USBtoUART
+-SPEED=115200
++PORT?=/dev/cu.SLAB_USBtoUART
+ 
+-NODEMCU-COMMAND=$(NODEMCU-UPLOADER) -b $(SPEED) --start_baud $(SPEED) -p $(PORT) upload
++SPEED?=115200
++
++NODEMCU-COMMAND?=$(NODEMCU-UPLOADER) -b $(SPEED) --start_baud $(SPEED) -p $(PORT) upload
++
++PYTHON?=python3
+ 
+ ######################################################################
+ 
+@@ -26,17 +29,17 @@ usage:
+ 
+ # Upload one files only
+ upload:
+-	@python $(NODEMCU-COMMAND) $(FILE)
++	@$(PYTHON) $(NODEMCU-COMMAND) $(FILE)
+ 
+ # Upload HTTP files only
+ upload_http: $(HTTP_FILES)
+-	@python $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
++	@$(PYTHON) $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
+ 
+ # Upload httpserver lua files (init and server module)
+ upload_server: $(LUA_FILES)
+-	@python $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
++	@$(PYTHON) $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
+ 
+ # Upload all
+ upload_all: $(LUA_FILES) $(HTTP_FILES)
+-	@python $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
++	@$(PYTHON) $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
+ 

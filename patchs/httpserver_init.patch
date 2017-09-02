@@ -1,0 +1,12 @@
+diff --git a/httpserver-compile.lua b/httpserver-compile.lua
+index 29b49a5..4cff883 100644
+--- a/httpserver-compile.lua
++++ b/httpserver-compile.lua
+@@ -25,6 +25,7 @@ local serverFiles = {
+    'httpserver-request.lua',
+    'httpserver-static.lua',
+    'httpserver-wifi.lua',
++   'httpserver-start.lua',
+ }
+ for i, f in ipairs(serverFiles) do compileAndRemoveIfNeeded(f) end
+ 

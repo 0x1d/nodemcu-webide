@@ -1,2 +1,4 @@
-*.gz
-
+dist/*.gz
+dist/*.lua
+dist/*.html
+venv/
