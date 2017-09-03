@@ -13,6 +13,8 @@ end
 
 local webideFiles = {
    'file-api.lua',
+   'webide-compile.lua',
+   'webide-websocket.lua',
 }
 for i, f in ipairs(webideFiles) do compileAndRemoveIfNeeded(f) end
 
