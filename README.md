@@ -16,7 +16,8 @@ The goal of this fork is to:
  * file
  * node
  * WiFi
- * sjson :heavy_exclamation_mark:
+ * sjson 
+ * mDNS :heavy_exclamation_mark:
 
 (Some of these dependencies come from httpserver itself)
 Modules marked with ":heavy_exclamation_mark:" are optional, all other are hard dependencies
