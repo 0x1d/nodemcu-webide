@@ -17,7 +17,7 @@ return function (connection, req, args)
                filelist[n] = s
             end
          end
-         ok, json = pcall(cjson.encode, filelist)
+         ok, json = pcall(sjson.encode, filelist)
          if ok then
             --print(json)
             connection:send(json)
