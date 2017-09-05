@@ -29,10 +29,12 @@ DIST_FILES = $(wildcard $(DIST)/*.gz) $(wildcard $(DIST)/*.lua)
 usage:
 	@echo "make upload FILE:=<file>  to upload a specific file (i.e make upload FILE:=init.lua)"
 	@echo "make upload_webide        to upload webide"
-	@echo "make upload_webide        to upload examples"
+	@echo "make upload_examples      to upload examples"
 	@echo "make upload_server        to upload the server code and init.lua"
 	@echo "make upload_all           to upload all"
 	@echo $(TEST)
+
+help: usage
 
 prepare: httpserver/Makefile patchserver
 
