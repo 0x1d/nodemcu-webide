@@ -1,25 +1,45 @@
-# **NodeMCU WebIDE** #
+# NodeMCU WebIDE
 
-You may find more details at my instructables:
-http://www.instructables.com/id/NodeMCU-WebIDE/
+This is a fork of @moononournation [nodemcu-webide](https://github.com/moononournation/nodemcu-webide) WebIDE
+implementation using [nodemcu-httpserver](https://github.com/marcoskirsch/nodemcu-httpserver) as a base.
 
-## NodeMCU WebIDE base on 2 core projects:
-### [nodemcu-httpserver](https://github.com/marcoskirsch/nodemcu-httpserver)
-A (very) simple web server written in Lua for the ESP8266 running the NodeMCU firmware.
+The goal of this fork is to:
+ * :white_check_mark: cleanup the depot
+ * :white_check_mark: use original sources for httpserver (and not a local copy) so every bugfix/update will be easily ported.
+ * :white_medium_small_square: make WebIDE even more fancier! 
 
-### [CodeMirror](https://codemirror.net)
+
+## NodeMCU modules dependencies:
+ * bit
+ * crypto
+ * encoder
+ * file
+ * node
+ * WiFi
+ * sjson :heavy_exclamation_mark:
+
+(Some of these dependencies come from httpserver itself)
+Modules marked with ":heavy_exclamation_mark:" are optional, all other are hard dependencies
+
+
+## Projects which made this one possible
+
+NodeMCU WebIDE base on two main projects:
+
+ * [CodeMirror](https://codemirror.net)
+
 A versatile text editor implemented in JavaScript for the browser.
 
-##nodemcu-websocket.lua rewrite from:
-### [creationix/nodemcu-webide](https://github.com/creationix/nodemcu-webide)
-A websocket based IDE for nodemcu devices.
+ * [Creationix's nodemcu-webide](https://github.com/creationix/nodemcu-webide)
+ 
+The original WebIDE which is using it's own websocket/server implementation.
 
-##Todo
-- allow multiple opened files
-- auto save file in web browser local storage
-- redirect NodeMCU output to web browser
-- new file template
-- more editor basic feature, such as search
-- refresh button for reload file list
-- fix WebSocket memory leakage issue
-- utilize WebSocket in WebIDE
+## Todolist
+ * allow multiple opened files
+ * auto save file in web browser local storage
+ * redirect NodeMCU output to web browser
+ * new file template
+ * more editor basic feature, such as search
+ * refresh button for reload file list
+ * fix WebSocket memory leakage issue
+ * utilize WebSocket in WebIDE
