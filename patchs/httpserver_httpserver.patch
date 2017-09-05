@@ -1,0 +1,17 @@
+diff --git a/httpserver.lua b/httpserver.lua
+index a244335..00d5934 100644
+--- a/httpserver.lua
++++ b/httpserver.lua
+@@ -96,6 +96,12 @@ return function (port)
+ 
+          local function onReceive(connection, payload)
+             collectgarbage()
++
++            -- Check websocket ASAP
++            if payload:find("Upgrade: websocket") then
++                return dofile('webide-websocket.lc')(connection, payload)
++            end
++
+             local conf = dofile("httpserver-conf.lc")
+             local auth
+             local user = "Anonymous"

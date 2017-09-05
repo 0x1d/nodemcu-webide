@@ -43,7 +43,7 @@ httpserver/Makefile:
 	@git submodule update
 	
 # Patch httpserver makefile for upload and init
-patchserver: httpserver/makefile.patched httpserver/init.patched
+patchserver: httpserver/makefile.patched httpserver/init.patched httpserver/httpserver.patched
 
 httpserver/makefile.patched: patchs/httpserver_makefile.patch httpserver/Makefile
 	@echo Patching httpserver makefile...
@@ -52,11 +52,17 @@ httpserver/makefile.patched: patchs/httpserver_makefile.patch httpserver/Makefil
 	@touch ${@}
 	
 httpserver/init.patched: patchs/httpserver_init.patch httpserver/httpserver-compile.lua
-	@echo Patching httpserver scripts...
+	@echo Patching httpserver compile scripts...
 	@if [ -e $@ ]; then patch -p1 -R < $?; fi
 	@patch -p1 < $?
 	@touch ${@}
-	
+
+httpserver/httpserver.patched: patchs/httpserver_httpserver.patch httpserver/httpserver.lua
+	@echo Patching httpserver.lua ...
+	@if [ -e $@ ]; then patch -p1 -R < $?; fi
+	@patch -p1 < $?
+	@touch ${@}
+
 httpserver/httpserver-start.lua:
 	@echo Replace httpserver init.lua by ${@}
 	@mv httpserver/init.lua ${@}

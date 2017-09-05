@@ -1,8 +1,8 @@
 -- Compile webide files
-if file.exists("httpserver-compile.lc") then
-   dofile("httpserver-compile.lc")
+if file.exists("webide-compile.lc") then
+   dofile("webide-compile.lc")
 else
-   dofile("httpserver-compile.lua")
+   dofile("webide-compile.lua")
 end
 
 if file.exists("startup.lua") then
