@@ -16,14 +16,13 @@ export PYTHON=$(CURDIR)/venv/bin/python
 ######################################################################
 
 SRC_LUA_FILES := $(wildcard src/*.lua)
-SRC_HTML_FILES := $(wildcard src/*.html)
-SRC_JS_FILES := $(wildcard src/*.js)
-SRC_ICO_FILES := $(wildcard src/*.ico)
-
+SRC_HTTP_FILES = $(wildcard src/http/*.html) $(wildcard src/http/*.js) $(wildcard src/http/*.lua) $(wildcard src/http/*.ico)
 EXAMPLE_FILES := $(wildcard examples/*.html) $(wildcard examples/*.lua)
 
 DIST := dist
-DIST_FILES = $(wildcard $(DIST)/*.gz) $(wildcard $(DIST)/*.lua)
+
+SRC_DIST_FILES = $(wildcard $(DIST)/*.lua) $(wildcard $(DIST)/http/*.gz) $(wildcard $(DIST)/http/*.lua)
+DIST_FILES = $(patsubst $(DIST)/%, %, $(SRC_DIST_FILES))
 
 # Print usage
 usage:
@@ -38,21 +37,27 @@ help: usage
 
 prepare: httpserver/Makefile patchserver
 
+clean:
+	@git submodule deinit -f .
+	@rm -f $(DIST)/*.gz
+	@rm -f $(DIST)/*.lua
+	@rm -Rf $(DIST)/http
+
 # make sure that the submodules are fetch
 httpserver/Makefile:
 	@echo Preparing submodules...
 	@git submodule init
 	@git submodule update
-	
+
 # Patch httpserver makefile for upload and init
-patchserver: httpserver/makefile.patched httpserver/init.patched httpserver/httpserver.patched
+patchserver: httpserver/makefile.patched httpserver/init.patched httpserver/httpserver.patched httpserver/httpserver-start.lua
 
 httpserver/makefile.patched: patchs/httpserver_makefile.patch httpserver/Makefile
 	@echo Patching httpserver makefile...
 	@if [ -e $@ ]; then patch -p1 -R < $?; fi
 	@patch -p1 < $?
 	@touch ${@}
-	
+
 httpserver/init.patched: patchs/httpserver_init.patch httpserver/httpserver-compile.lua
 	@echo Patching httpserver compile scripts...
 	@if [ -e $@ ]; then patch -p1 -R < $?; fi
@@ -71,28 +76,19 @@ httpserver/httpserver-start.lua:
 
 
 install: compress copy_lua
-	
-# Compress files
-compress: compress_html compress_js compress_ico
 
-compress_html: $(SRC_HTML_FILES)
-	@echo Compression HTML files
-	@cp $^ $(DIST)/
-	@gzip -9 -f $(DIST)/*.html
-	
-compress_js: $(SRC_JS_FILES)
-	@echo Compression JS files
-	cp $^ $(DIST)/
-	gzip -9 -f $(DIST)/*.js
-	
-compress_ico: $(SRC_ICO_FILES)
-	@echo Compression ICO files
-	cp $^ $(DIST)/
-	gzip -9 -f $(DIST)/*.ico
+# Compress files
+compress: $(SRC_HTTP_FILES)
+	@echo Compression HTTP files
+	@install -d $(DIST)/http/
+	@install $^ $(DIST)/http/
+	@gzip -9 -f $(DIST)/http/*.html
+	@gzip -9 -f $(DIST)/http/*.js
+	@gzip -9 -f $(DIST)/http/*.ico
 
 copy_lua: $(SRC_LUA_FILES)
-	cp $^ $(DIST)/
-	
+	@cp $^ $(DIST)/
+
 venv: prepare venv/bin/activate
 venv/bin/activate: uploader/test_requirements.txt
 	@test -d venv || virtualenv venv --python=python3
@@ -104,14 +100,16 @@ upload: prepare venv
 	@$(PYTHON) $(NODEMCU-COMMAND) $(FILE)
 
 # Upload webide
-upload_webide: $(DIST_FILES) prepare venv install
-	@$(PYTHON) $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
+upload_webide: prepare venv install
+	@cd $(DIST) && $(PYTHON) $(NODEMCU-COMMAND) $(DIST_FILES)
 
 # Upload examples files
-upload_examples: $(EXAMPLES_FILES) prepare venv
-	@$(PYTHON) $(NODEMCU-COMMAND) $(foreach f, $^, $(f))
-	
-	
+upload_examples: $(EXAMPLES_FILES) prepare venv copy_example upload_webide
+
+copy_example:
+	@cp $(EXAMPLE_FILES) $(DIST)/http
+
+
 # Upload httpserver lua files (init and server module)
 upload_server: prepare patchserver venv httpserver/Makefile
 	@make -C httpserver upload_server

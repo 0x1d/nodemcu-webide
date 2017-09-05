@@ -12,7 +12,7 @@ local compileAndRemoveIfNeeded = function(f)
 end
 
 local webideFiles = {
-   'file-api.lua',
+   'http/file-api.lua',
    'webide-compile.lua',
    'webide-websocket.lua',
 }
