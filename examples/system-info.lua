@@ -8,7 +8,7 @@ return function (connection, req, args)
   connection:send('<p><b>Heap:</b> '..node.heap()..'</p>')
   connection:send('<p><b>Info:</b> '..node.info()..'</p>')
 
-  connection:send('<p><b>Vdd:</b> '..adc.readvdd33()..' mV</p>')
+  -- connection:send('<p><b>Vdd:</b> '..adc.readvdd33()..' mV</p>')
 
   local address, size = file.fscfg()
   connection:send('<p><b>File System Address:</b> '..address..'</p>')
